@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">汇率转换</string>
+    <string name="menu_set_label">setting</string>
+</resources>

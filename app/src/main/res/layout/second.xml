@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ConfigActivity">
+
+    <EditText
+        android:id="@+id/dollar_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="numberDecimal"
+        android:shadowColor="#E91E63"
+        android:textColor="#E91E63"
+        android:textColorHighlight="#E91E63"
+        android:textColorHint="#E91E63"
+        android:textSize="24sp"/>
+
+    <EditText
+        android:id="@+id/euro_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="numberDecimal"
+        android:shadowColor="#E91E63"
+        android:textColor="#E91E63"
+        android:textColorHighlight="#E91E63"
+        android:textColorHint="#E91E63"
+        android:textSize="24sp"
+        />
+
+    <EditText
+        android:id="@+id/won_rate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:gravity="center"
+        android:inputType="numberDecimal"
+        android:shadowColor="#E91E63"
+        android:textColor="#E91E63"
+        android:textColorHighlight="#E91E63"
+        android:textColorHint="#E91E63"
+        android:textSize="24sp"/>
+
+    <Button
+        android:id="@+id/btn_save"
+        android:onClick="save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:background="#FF9800"
+        android:gravity="center"
+        android:text="save"
+        android:textSize="24sp"/>
+</LinearLayout>
