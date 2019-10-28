@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/tools"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".FrameActivity">
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_main"
+        android:name="com.example.huilv.HomeFragment"
+        android:layout_weight="10"/>
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/fragment_func"
+        android:name="com.example.huilv.FuncFragment"
+        android:layout_weight="10"/>
+
+    <fragment
+        android:id="@+id/fragment_setting"
+        android:name="com.example.huilv.SettingFragment"
+        android:layout_width="match_parent"
+        android:layout_height="459dp"
+        android:layout_weight="10" />
+
+    <RadioGroup
+        android:id="@+id/bottomGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioHome"
+            style="@style/rg_btn_style"
+            android:drawableTop="@drawable/home"
+            android:text="首页" />
+
+        <RadioButton
+            android:id="@+id/radioFunc"
+            style="@style/rg_btn_style"
+            android:drawableTop="@drawable/func"
+            android:text="功能" />
+
+        <RadioButton
+            android:id="@+id/radioSetting"
+            style="@style/rg_btn_style"
+            android:drawableTop="@drawable/setting"
+            android:text="设置" />
+
+    </RadioGroup>
+
+
+
+</LinearLayout >

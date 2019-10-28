@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class MainActivity<inputStream2String> extends AppCompatActivity  implements Runnable{
     private static final String TAG = "Rate";
@@ -36,6 +40,7 @@ public class MainActivity<inputStream2String> extends AppCompatActivity  impleme
     private float dollarRate = 0.1f;
     private float euroRate = 0.2f;
     private float wonRate = 0.3f;
+    private String updateDate = "" ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,35 +49,60 @@ public class MainActivity<inputStream2String> extends AppCompatActivity  impleme
 
         rmb = findViewById(R.id.rmb);
         show = findViewById(R.id.showOut);
-        SharedPreferences sharedPreferences=getSharedPreferences("myrate",Activity.MODE_PRIVATE);
 
+        //获取SP里保存的数据
+        SharedPreferences sharedPreferences=getSharedPreferences("myrate",Activity.MODE_PRIVATE);
+        SharedPreferences sp= PreferenceManager.getDefaultSharedPreferences(this);
         dollarRate = sharedPreferences.getFloat("dollar_rate",0.0f);
         euroRate = sharedPreferences.getFloat("euro_rate",0.0f);
         wonRate = sharedPreferences.getFloat("won_rate",0.0f);
+        updateDate = sharedPreferences.getString("update_date","");
 
-        //开启自线程
-        Thread t =new Thread(this);
-        t.start();
+        //获取当前系统时间
+        Date today = Calendar.getInstance().getTime();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        final String todayStr = sdf.format(today);
+
+        //判断时间
+        if(!todayStr.equals(updateDate)){
+            Log.i(TAG, "onCreate: 需要更新");
+            //开启自线程
+            Thread t =new Thread(this);
+            t.start();
+        }else{
+            Log.i(TAG, "onCreate: 不需要更新");
+        }
+
+
 
         handler=new Handler(){
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                if (msg.what==5){
-                    Bundle bd1 = (Bundle) msg.obj;
-                    dollarRate = bd1.getFloat("dollar-rate");
-                    euroRate = bd1.getFloat("euro-rate");
-                    wonRate = bd1.getFloat("won-rate");
+                @Override
+                public void handleMessage(@NonNull Message msg) {
+                    if (msg.what==5){
+                        Bundle bd1 = (Bundle) msg.obj;
+                        dollarRate = bd1.getFloat("dollar-rate");
+                        euroRate = bd1.getFloat("euro-rate");
+                        wonRate = bd1.getFloat("won-rate");
 
-                    Log.i(TAG, "handleMessage: dollarRate:" +dollarRate);
-                    Log.i(TAG, "handleMessage: euroRate:" +euroRate);
-                    Log.i(TAG, "handleMessage: wonRate:" +wonRate);
+                        Log.i(TAG, "handleMessage: dollarRate:" +dollarRate);
+                        Log.i(TAG, "handleMessage: euroRate:" +euroRate);
+                        Log.i(TAG, "handleMessage: wonRate:" +wonRate);
 
-                    Toast.makeText(MainActivity.this,"汇率已更新",Toast.LENGTH_SHORT).show();
+                        //保存更新的日期
+                        SharedPreferences sharedPreferences=getSharedPreferences("myrate",Activity.MODE_PRIVATE);
+                        SharedPreferences.Editor editor=sharedPreferences.edit();
+                        editor.putFloat("dollar_rate",dollarRate);
+                        editor.putFloat("euro_rate",euroRate);
+                        editor.putFloat("won_rate",wonRate);
+                        editor.putString("update_date",todayStr);
+                        editor.apply();
+
+                        Toast.makeText(MainActivity.this,"汇率已更新",Toast.LENGTH_SHORT).show();
+                    }
+
+                    super.handleMessage(msg);
+
                 }
-
-                super.handleMessage(msg);
-
-            }
         };
 
 
@@ -90,7 +120,9 @@ public class MainActivity<inputStream2String> extends AppCompatActivity  impleme
         }else{
             //提示用户输入内容
             Toast.makeText(this, "请输入金额", Toast.LENGTH_SHORT).show();
+            return;
         }
+
         Log.i(TAG,"onClick: r="+ r);
 
         //计算
@@ -117,6 +149,8 @@ public class MainActivity<inputStream2String> extends AppCompatActivity  impleme
         Log.i( TAG, "openOne: dollar_rate_key=" + dollarRate );
         Log.i( TAG, "openOne: euro_rate_key=" + euroRate );
         Log.i( TAG, "openOne: won_rate_key=" + wonRate );
+
+        //startActivity(config);
         startActivityForResult( config, 1 );
     }
 
@@ -131,6 +165,23 @@ public class MainActivity<inputStream2String> extends AppCompatActivity  impleme
         if(item.getItemId()==R.id.menu_set){
 
             openConfig();
+        }else if(item.getItemId()==R.id.open_list) {
+            //打开列表窗口
+            Intent list = new Intent(this, RateListActivity.class);
+            startActivity(list);
+
+//            //测试数据库
+//            RateItem item1 = new RateItem("aaaa","123");
+//            RateManager manager = new RateManager(this);
+//            manager.add(item1);
+//            manager.add(new RateItem("bbbb","23.5"));
+//
+//            //查询所有数据
+//            List<RateItem> testList = manager.listAll();
+//            for(RateItem i :testList){
+//                Log.i(TAG, "onOptionsItemSelected: 取出数据Name="+ i.getCurName()+" "+i.getCurRate());
+//            }
+
         }
         return super.onOptionsItemSelected( item );
     }
@@ -223,6 +274,7 @@ public class MainActivity<inputStream2String> extends AppCompatActivity  impleme
         } catch (IOException e) {
             e.printStackTrace();
         }
+
 
         //获取msg对象，用于返回主线程
         Message msg =handler.obtainMessage(5);

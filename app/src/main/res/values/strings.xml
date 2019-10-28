@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">汇率转换</string>
     <string name="menu_set_label">setting</string>
+    <string name="lable_open_list">OpenList</string>
+    <string name="radio_home_label">首页</string>
+    <string name="radio_func_label">功能</string>
+    <string name="radio_setting_label">设置</string>
 </resources>
